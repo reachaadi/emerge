@@ -205,10 +205,14 @@ class GoParser(AbstractParser, ParsingMixin):
             # consider dependency a pure string, if we get a string result from b) single line go import
             if isinstance(parsed_dependency, str):
                 dependency = parsed_dependency
-            else: # otherwise if we get a list of ParseResults, use the string name of the dependency
+            # else: # otherwise if we get a list of ParseResults, use the string name of the dependency
+            #     dependency = parsed_dependency[0]
+            elif parsed_dependency:
                 dependency = parsed_dependency[0]
+            else:
+                dependency = None                
 
-            if self._is_dependency_in_ignore_list(dependency, analysis):
+            if dependency is None or self._is_dependency_in_ignore_list(dependency, analysis):
                 LOGGER.debug(f'ignoring dependency from {result.unique_name} to {dependency}')
             else:
                 dependency_is_resolved = False
